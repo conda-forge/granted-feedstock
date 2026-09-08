@@ -11,20 +11,20 @@ source:
   target_directory: src
 
 build:
-  number: 0
+  number: 1
   script:
     - cd src
     - go-licenses save ./cmd/granted --save_path ../library_licenses
     - if: unix
       then:
-        - go build -v -o $PREFIX/bin/granted -ldflags="-s -w -X github.com/fwdcloudsec/granted/internal/build.Version=${{ version }}" ./cmd/granted
+        - go build -v -o $PREFIX/bin/granted -ldflags="-s -w -X github.com/fwdcloudsec/granted/internal/build.Version=${{ version }} -X github.com/fwdcloudsec/granted/internal/build.ConfigFolderName=.granted" ./cmd/granted
         - ln -sf granted $PREFIX/bin/assumego
         - cp scripts/assume $PREFIX/bin/assume
         - cp scripts/assume.fish $PREFIX/bin/assume.fish
         - cp scripts/assume.tcsh $PREFIX/bin/assume.tcsh
         - chmod +x $PREFIX/bin/assume $PREFIX/bin/assume.fish $PREFIX/bin/assume.tcsh
       else:
-        - go build -v -o %LIBRARY_BIN%\granted.exe -ldflags="-s -X github.com/fwdcloudsec/granted/internal/build.Version=${{ version }}" .\cmd\granted
+        - go build -v -o %LIBRARY_BIN%\granted.exe -ldflags="-s -X github.com/fwdcloudsec/granted/internal/build.Version=${{ version }} -X github.com/fwdcloudsec/granted/internal/build.ConfigFolderName=.granted" .\cmd\granted
         - copy %LIBRARY_BIN%\granted.exe %LIBRARY_BIN%\assumego.exe
         - copy scripts\assume.bat %LIBRARY_BIN%\assume.bat
         - copy scripts\assume.ps1 %LIBRARY_BIN%\assume.ps1
